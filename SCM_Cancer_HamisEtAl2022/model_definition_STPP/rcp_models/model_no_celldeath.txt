@@ -1,0 +1,3 @@
+Birth[1,truncatedGaussian[0.001,25]]
+BirthByFacilitation[1,1,truncatedGaussian[100,100],truncatedGaussian[0.025,25]] 
+BirthByFacilitation[2,1,truncatedGaussian[100,100],truncatedGaussian[0.05,25]]

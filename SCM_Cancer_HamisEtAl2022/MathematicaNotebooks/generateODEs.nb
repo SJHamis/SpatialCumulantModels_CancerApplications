@@ -1,0 +1,1738 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     75872,       1730]
+NotebookOptionsPosition[     70654,       1639]
+NotebookOutlinePosition[     71082,       1656]
+CellTagsIndexPosition[     71039,       1653]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Generate ODEs from RCP-processes", "Title",
+ CellChangeTimes->{{3.86003546727969*^9, 3.860035498079341*^9}, {
+  3.860035553837346*^9, 3.8600355560497217`*^9}, {3.860035687093464*^9, 
+  3.860035687419828*^9}, {3.8600365968743668`*^9, 
+  3.860036601435996*^9}},ExpressionUUID->"5859def6-c332-42e0-a934-\
+4f6f86374568"],
+
+Cell["\<\
+Use Cornell et al.\[CloseCurlyQuote]s UF-Software to generate model ODEs.
+Source: Cornell, S.J., Suprunenko, Y.F., Finkelshtein, D. et al. A unified \
+framework for analysis of individual-based models in ecology and beyond. Nat \
+Commun 10, 4716 (2019). https://doi.org/10.1038/s41467-019-12172-y.\
+\>", "Text",
+ CellChangeTimes->{{3.860036106099791*^9, 3.860036159968899*^9}, {
+  3.860036516075697*^9, 3.8600365172142344`*^9}, {3.86095189544106*^9, 
+  3.8609518960178003`*^9}, {3.86095192770179*^9, 
+  3.860951944983358*^9}},ExpressionUUID->"e837ba2c-4510-47ae-a8c2-\
+e82d7cbd9dd8"],
+
+Cell[CellGroupData[{
+
+Cell["Import libraries", "Subsubsection",
+ CellChangeTimes->{{3.86003618066962*^9, 
+  3.860036189700657*^9}},ExpressionUUID->"4c732723-76b3-46e8-9b4b-\
+83f1593a8c81"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", "\"\<SSPPlibraryOfProcesses`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8441601268904777`*^9, 3.8441601313931017`*^9}, {
+  3.8583327864261045`*^9, 3.8583327880568495`*^9}, {3.8592917110103893`*^9, 
+  3.859291711350789*^9}},
+ CellLabel->"In[69]:=",ExpressionUUID->"c400b7b3-504e-48ec-bb8d-0c7bd3edbbcd"],
+
+Cell["\<\
+Note: Command Get[\[OpenCurlyDoubleQuote]SSPPlibraryOfProcessesForTeX`\
+\[CloseCurlyDoubleQuote]] need to be compiled twice!\
+\>", "Text",
+ CellChangeTimes->{{3.8600360389146967`*^9, 3.86003609694101*^9}, {
+  3.860951815639782*^9, 
+  3.8609518195557756`*^9}},ExpressionUUID->"7bd97474-7c75-4133-93f2-\
+76c9c85f9387"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", "\"\<SSPPlibraryOfProcessesForTeX`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8414075934644604`*^9, 3.841407604209315*^9}, {
+  3.8414078475014277`*^9, 3.8414078498524203`*^9}},
+ CellLabel->"In[71]:=",ExpressionUUID->"8fca06a6-822d-4e84-b696-83db558c563b"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", "\"\<SSPPanalyticalExpressions`\>\"", "]"}]], "Input",
+ CellLabel->"In[72]:=",ExpressionUUID->"989eb80d-3adc-4f4d-a15a-197427c019f9"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", "\"\<SSPPwriteInTeX`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8414085685585127`*^9, 3.8414085685834565`*^9}},
+ CellLabel->"In[73]:=",ExpressionUUID->"5ea73276-dc52-4737-8fc0-5e12d62a9368"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Show UF-software function descriptions for easier use *", \
+"Subsubsection",
+ CellChangeTimes->{{3.860036195186007*^9, 3.860036199319466*^9}, {
+  3.86003636031035*^9, 3.860036368072867*^9}, {3.860036696176846*^9, 
+  3.8600367033286037`*^9}},ExpressionUUID->"42691c9d-2f30-49e1-8fc9-\
+dd74e98183f7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "SSPPlibraryOfProcesses`*"}]], "Input",
+ CellChangeTimes->{{3.844158476699375*^9, 3.8441584783536158`*^9}, {
+  3.8600356577618847`*^9, 3.86003566336803*^9}},
+ CellLabel->"In[75]:=",ExpressionUUID->"a92a8805-dbc1-47b6-bd88-259ca47b5872"],
+
+Cell[BoxData[
+ StyleBox[
+  FrameBox[GridBox[{
+     {
+      DynamicModuleBox[{Typeset`open$$ = True}, 
+       PaneSelectorBox[{False->
+        ButtonBox[
+         RowBox[{
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEBitmaps", "RightPointerOpener"]], " ", 
+          StyleBox["SSPPlibraryOfProcesses`", "InformationGridGroupHeader"]}],
+         Appearance->None,
+         BaseStyle->"InformationGridLink",
+         ButtonFunction:>FEPrivate`Set[Typeset`open$$, True],
+         Evaluator->Automatic,
+         Method->"Preemptive"], True->
+        PaneBox[GridBox[{
+           {
+            ButtonBox[
+             RowBox[{
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{8., {2., 6.}}], " ", 
+              
+              StyleBox["SSPPlibraryOfProcesses`", 
+               "InformationGridGroupHeader"]}],
+             Appearance->None,
+             BaseStyle->"InformationGridLink",
+             ButtonFunction:>FEPrivate`Set[Typeset`open$$, False],
+             Evaluator->Automatic,
+             Method->"Preemptive"]},
+           {
+            PaneBox[GridBox[{
+               {
+                ButtonBox[
+                 StyleBox["Birth", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "Birth", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DeathByCompetition", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "DeathByCompetition", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthByConsumption", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthByConsumption", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DeathByExternalFactor", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "DeathByExternalFactor", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthByFacilitation", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthByFacilitation", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DensityIndependentDeath", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "DensityIndependentDeath", "SSPPlibraryOfProcesses`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthToAnotherType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthToAnotherType", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Immigration", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "Immigration", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeAndChangeInType", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthToAnotherTypeAndChangeInType", 
+                    "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Infection", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "Infection", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeByConsumption", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthToAnotherTypeByConsumption", 
+                    "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Jump", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "Jump", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeByFacilitation", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "BirthToAnotherTypeByFacilitation", 
+                    "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["JumpAndChangeInType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "JumpAndChangeInType", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["ChangeInType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "ChangeInType", "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["listOfElementaryProcesses", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "listOfElementaryProcesses", "SSPPlibraryOfProcesses`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["ChangeInTypeByConsumption", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "ChangeInTypeByConsumption", "SSPPlibraryOfProcesses`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["TestTheCorrectnessOfProcesses", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "TestTheCorrectnessOfProcesses", 
+                    "SSPPlibraryOfProcesses`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["ChangeInTypeByFacilitation", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-54a97055-a874-4d4a-a103-62cb8b36384d", {
+                   "ChangeInTypeByFacilitation", "SSPPlibraryOfProcesses`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcesses`",
+                 Evaluator->Automatic], ""}
+              },
+              DefaultBaseStyle->"Text",
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+              GridBoxItemSize->{"Columns" -> {{
+                   Scaled[0.475]}}}],
+             ImageMargins->{{10, 0}, {0, 2}}]}
+          },
+          GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+         FrameMargins->{{0, 0}, {8, 0}}]}, Dynamic[Typeset`open$$],
+        ImageSize->Automatic]]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+    GridBoxDividers->{"ColumnsIndexed" -> {{False}}, "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.8]}, 
+        Offset[0.2]}}],
+   BaseStyle->"InformationTitleFrame"], "InformationGridPlain"]], "Output",
+ CellChangeTimes->{{3.8441584788062243`*^9, 3.84415849490816*^9}, {
+   3.84415867914414*^9, 3.8441587793598623`*^9}, {3.844158985806631*^9, 
+   3.8441589920089884`*^9}, 3.8441596836514487`*^9, {3.8441597179919124`*^9, 
+   3.8441597360420313`*^9}, 3.8441598542406*^9, 3.844159908014331*^9, {
+   3.8441599889652643`*^9, 3.844160032488753*^9}, {3.8441600725629296`*^9, 
+   3.844160087436922*^9}, {3.8441601392803183`*^9, 3.8441601712296276`*^9}, 
+   3.844160360816454*^9, {3.8441606477358847`*^9, 3.8441606909844646`*^9}, 
+   3.8441607362283583`*^9, 3.8441656503634524`*^9, 3.8477039695843306`*^9, 
+   3.847704005263858*^9, {3.8477041466987085`*^9, 3.8477041571494327`*^9}, 
+   3.8477042171401405`*^9, 3.847704255528784*^9, 3.8477044015531616`*^9, {
+   3.847704472232793*^9, 3.8477044824211435`*^9}, 3.8477045791876574`*^9, 
+   3.858303482787401*^9, 3.8583035386792717`*^9, 3.8583036079828005`*^9, 
+   3.858303656622121*^9, 3.858307290908592*^9, 3.8583289790739985`*^9, 
+   3.858329013595363*^9, 3.858332800398506*^9, 3.85891852840196*^9, 
+   3.858918627146405*^9, 3.859012605691049*^9, 3.859012740729331*^9, 
+   3.8591088793232975`*^9, 3.859122381350579*^9, {3.859291183517939*^9, 
+   3.8592911893684473`*^9}, 3.8592914138709307`*^9, 3.8592914464587507`*^9, 
+   3.859292240871174*^9, {3.859292281920228*^9, 3.859292287702464*^9}, 
+   3.859292470041265*^9, {3.8592925094364634`*^9, 3.859292511297998*^9}, 
+   3.8594238252821207`*^9, {3.8600356583267527`*^9, 3.86003566396281*^9}},
+ CellLabel->"Out[75]=",ExpressionUUID->"245100d6-2984-46b4-853c-f81e2e7cd79d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "SSPPlibraryOfProcessesForTeX`*"}]], "Input",
+ CellChangeTimes->{{3.841407626913537*^9, 3.8414076269348497`*^9}, {
+  3.8441574121379423`*^9, 3.8441574132077837`*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"e7860462-99df-4604-bf65-a7e18792ef96"],
+
+Cell[BoxData[
+ StyleBox[
+  FrameBox[GridBox[{
+     {
+      DynamicModuleBox[{Typeset`open$$ = True}, 
+       PaneSelectorBox[{False->
+        ButtonBox[
+         RowBox[{
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEBitmaps", "RightPointerOpener"]], " ", 
+          
+          StyleBox["SSPPlibraryOfProcessesForTeX`", 
+           "InformationGridGroupHeader"]}],
+         Appearance->None,
+         BaseStyle->"InformationGridLink",
+         ButtonFunction:>FEPrivate`Set[Typeset`open$$, True],
+         Evaluator->Automatic,
+         Method->"Preemptive"], True->
+        PaneBox[GridBox[{
+           {
+            ButtonBox[
+             RowBox[{
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{8., {2., 6.}}], " ", 
+              
+              StyleBox["SSPPlibraryOfProcessesForTeX`", 
+               "InformationGridGroupHeader"]}],
+             Appearance->None,
+             BaseStyle->"InformationGridLink",
+             ButtonFunction:>FEPrivate`Set[Typeset`open$$, False],
+             Evaluator->Automatic,
+             Method->"Preemptive"]},
+           {
+            PaneBox[GridBox[{
+               {
+                ButtonBox[
+                 StyleBox["Birth", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "Birth", "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeByConsumption", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthToAnotherTypeByConsumption", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DeathByCompetition", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "DeathByCompetition", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Jump", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "Jump", "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthByConsumption", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthByConsumption", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeByFacilitation", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthToAnotherTypeByFacilitation", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DeathByExternalFactor", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "DeathByExternalFactor", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["JumpAndChangeInType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "JumpAndChangeInType", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthByFacilitation", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthByFacilitation", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ChangeInType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "ChangeInType", "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["DensityIndependentDeath", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "DensityIndependentDeath", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["listOfElementaryProcesses", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "listOfElementaryProcesses", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BirthToAnotherType", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthToAnotherType", "SSPPlibraryOfProcessesForTeX`"}, 
+                   False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["ChangeInTypeByConsumption", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "ChangeInTypeByConsumption", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Immigration", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "Immigration", "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["TestTheCorrectnessOfProcesses", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "TestTheCorrectnessOfProcesses", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 
+                 StyleBox["BirthToAnotherTypeAndChangeInType", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "BirthToAnotherTypeAndChangeInType", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 
+                 StyleBox["ChangeInTypeByFacilitation", 
+                  "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "ChangeInTypeByFacilitation", 
+                    "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["Infection", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-968d713f-ee27-4f39-b067-19574e5ed018", {
+                   "Infection", "SSPPlibraryOfProcessesForTeX`"}, False},
+                 ButtonNote->"SSPPlibraryOfProcessesForTeX`",
+                 Evaluator->Automatic], ""}
+              },
+              DefaultBaseStyle->"Text",
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+              GridBoxItemSize->{"Columns" -> {{
+                   Scaled[0.2375]}}}],
+             ImageMargins->{{10, 0}, {0, 2}}]}
+          },
+          GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+         FrameMargins->{{0, 0}, {8, 0}}]}, Dynamic[Typeset`open$$],
+        ImageSize->Automatic]]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+    GridBoxDividers->{"ColumnsIndexed" -> {{False}}, "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.8]}, 
+        Offset[0.2]}}],
+   BaseStyle->"InformationTitleFrame"], "InformationGridPlain"]], "Output",
+ CellChangeTimes->{
+  3.8414076276275663`*^9, 3.843656028492138*^9, {3.8441572573622446`*^9, 
+   3.844157282951456*^9}, {3.844157373200803*^9, 3.8441574136838264`*^9}, {
+   3.844157484279491*^9, 3.844157489329978*^9}, {3.844157551671333*^9, 
+   3.8441575549029703`*^9}, 3.8441575863181987`*^9, 3.844158038943886*^9, {
+   3.8441584492295055`*^9, 3.844158450433584*^9}, {3.8441585268928413`*^9, 
+   3.8441585285502496`*^9}, 3.8441586055296245`*^9, 3.844158694491642*^9, {
+   3.8441589958063436`*^9, 3.844158998229381*^9}, 3.84415985796869*^9, 
+   3.844159912365402*^9, 3.8441654706514664`*^9, 3.8441656545352097`*^9, 
+   3.8477039802245903`*^9, 3.8477040158849173`*^9, {3.847704161303238*^9, 
+   3.8477041727451544`*^9}, 3.8477042079980335`*^9, 3.847704260219641*^9, 
+   3.847704424555885*^9, 3.8477045822225275`*^9, 3.8583036725934463`*^9, 
+   3.8583072909612017`*^9, 3.858917924257352*^9, 3.859012753707393*^9, 
+   3.859108886677425*^9, 3.859122394595727*^9, {3.859291183530579*^9, 
+   3.859291189380725*^9}, 3.8592914138851233`*^9, 3.85929144647255*^9, 
+   3.859292240885306*^9, {3.859292281935848*^9, 3.859292287715612*^9}, 
+   3.8592924700567207`*^9, {3.859292509454585*^9, 3.859292511314164*^9}, 
+   3.8594238252951508`*^9},
+ CellLabel->"Out[9]=",ExpressionUUID->"ed500820-f000-43f5-ad67-486d0bbb48b7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "SSPPanalyticalExpressions`*"}]], "Input",
+ CellChangeTimes->{{3.841407642223173*^9, 3.841407642240703*^9}, 
+   3.8414077899561114`*^9, {3.8414078398682485`*^9, 3.8414078811399384`*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"35b5be82-8687-44b1-ba8c-292ce24ee596"],
+
+Cell[BoxData[
+ StyleBox[
+  FrameBox[GridBox[{
+     {
+      DynamicModuleBox[{Typeset`open$$ = True}, 
+       PaneSelectorBox[{False->
+        ButtonBox[
+         RowBox[{
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEBitmaps", "RightPointerOpener"]], " ", 
+          
+          StyleBox["SSPPanalyticalExpressions`", 
+           "InformationGridGroupHeader"]}],
+         Appearance->None,
+         BaseStyle->"InformationGridLink",
+         ButtonFunction:>FEPrivate`Set[Typeset`open$$, True],
+         Evaluator->Automatic,
+         Method->"Preemptive"], True->
+        PaneBox[GridBox[{
+           {
+            ButtonBox[
+             RowBox[{
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{8., {2., 6.}}], " ", 
+              
+              StyleBox["SSPPanalyticalExpressions`", 
+               "InformationGridGroupHeader"]}],
+             Appearance->None,
+             BaseStyle->"InformationGridLink",
+             ButtonFunction:>FEPrivate`Set[Typeset`open$$, False],
+             Evaluator->Automatic,
+             Method->"Preemptive"]},
+           {
+            PaneBox[GridBox[{
+               {
+                ButtonBox[
+                 StyleBox["gAllSolutionsAtGeneralQ", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "gAllSolutionsAtGeneralQ", "SSPPanalyticalExpressions`"}, 
+                   False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["gSolutionAtSolvedQ", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "gSolutionAtSolvedQ", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HPf", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HPf", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HQfALL", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HQfALL", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["qSolution", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "qSolution", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["gAllSolutionsAtSolvedQ", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "gAllSolutionsAtSolvedQ", "SSPPanalyticalExpressions`"}, 
+                   False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HGf", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HGf", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HPfALL", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HPfALL", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["pAllSolutionsAtGeneralQ", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "pAllSolutionsAtGeneralQ", "SSPPanalyticalExpressions`"}, 
+                   False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["qSolutionsALL", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "qSolutionsALL", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["gSolutionAtGeneralQ", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "gSolutionAtGeneralQ", "SSPPanalyticalExpressions`"}, 
+                   False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HGfALL", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HGfALL", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HQf", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "HQf", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["pAllSolutionsAtSolvedQG", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "pAllSolutionsAtSolvedQG", "SSPPanalyticalExpressions`"}, 
+                   False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["speciesSSPP", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-dc239ac6-5a8a-4d11-a27a-87bd58cbefdc", {
+                   "speciesSSPP", "SSPPanalyticalExpressions`"}, False},
+                 ButtonNote->"SSPPanalyticalExpressions`",
+                 Evaluator->Automatic]}
+              },
+              DefaultBaseStyle->"Text",
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+              GridBoxItemSize->{"Columns" -> {{
+                   Scaled[0.19]}}}],
+             ImageMargins->{{10, 0}, {0, 2}}]}
+          },
+          GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+         FrameMargins->{{0, 0}, {8, 0}}]}, Dynamic[Typeset`open$$],
+        ImageSize->Automatic]]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+    GridBoxDividers->{"ColumnsIndexed" -> {{False}}, "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.8]}, 
+        Offset[0.2]}}],
+   BaseStyle->"InformationTitleFrame"], "InformationGridPlain"]], "Output",
+ CellChangeTimes->{
+  3.8414078818737593`*^9, 3.843656033239993*^9, 3.8441660613399563`*^9, 
+   3.8477040198912973`*^9, 3.858305294629509*^9, 3.8583072910088863`*^9, {
+   3.859012749955344*^9, 3.859012757699712*^9}, 3.859108886756353*^9, 
+   3.859122396895078*^9, {3.859291183537717*^9, 3.8592911893880653`*^9}, 
+   3.8592914138977213`*^9, 3.85929144647808*^9, 3.859292240898094*^9, {
+   3.8592922819492483`*^9, 3.859292287730163*^9}, 3.859292470071907*^9, {
+   3.8592925094728317`*^9, 3.859292511330737*^9}, 3.8594238253085823`*^9},
+ CellLabel->"Out[10]=",ExpressionUUID->"30e31c8d-0427-4545-9491-c2c84e277a96"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "SSPPwriteInTeX`*"}]], "Input",
+ CellChangeTimes->{{3.841408596747715*^9, 3.841408596766857*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"f0194bd3-a5d7-4ac0-8614-5046e7d9f6a9"],
+
+Cell[BoxData[
+ StyleBox[
+  FrameBox[GridBox[{
+     {
+      DynamicModuleBox[{Typeset`open$$ = True}, 
+       PaneSelectorBox[{False->
+        ButtonBox[
+         RowBox[{
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEBitmaps", "RightPointerOpener"]], " ", 
+          StyleBox["SSPPwriteInTeX`", "InformationGridGroupHeader"]}],
+         Appearance->None,
+         BaseStyle->"InformationGridLink",
+         ButtonFunction:>FEPrivate`Set[Typeset`open$$, True],
+         Evaluator->Automatic,
+         Method->"Preemptive"], True->
+        PaneBox[GridBox[{
+           {
+            ButtonBox[
+             RowBox[{
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{8., {2., 6.}}], " ", 
+              StyleBox["SSPPwriteInTeX`", "InformationGridGroupHeader"]}],
+             Appearance->None,
+             BaseStyle->"InformationGridLink",
+             ButtonFunction:>FEPrivate`Set[Typeset`open$$, False],
+             Evaluator->Automatic,
+             Method->"Preemptive"]},
+           {
+            PaneBox[GridBox[{
+               {
+                ButtonBox[
+                 StyleBox["inFourierSeparately", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-3174de65-4026-4778-8d6f-388d3ca25fea", {
+                   "inFourierSeparately", "SSPPwriteInTeX`"}, False},
+                 ButtonNote->"SSPPwriteInTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["inFourierTogether", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-3174de65-4026-4778-8d6f-388d3ca25fea", {
+                   "inFourierTogether", "SSPPwriteInTeX`"}, False},
+                 ButtonNote->"SSPPwriteInTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["inRealSeparately", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-3174de65-4026-4778-8d6f-388d3ca25fea", {
+                   "inRealSeparately", "SSPPwriteInTeX`"}, False},
+                 ButtonNote->"SSPPwriteInTeX`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["inRealTogether", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-3174de65-4026-4778-8d6f-388d3ca25fea", {
+                   "inRealTogether", "SSPPwriteInTeX`"}, False},
+                 ButtonNote->"SSPPwriteInTeX`",
+                 Evaluator->Automatic]}
+              },
+              DefaultBaseStyle->"Text",
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+              GridBoxItemSize->{"Columns" -> {{
+                   Scaled[0.2375]}}}],
+             ImageMargins->{{10, 0}, {0, 2}}]}
+          },
+          GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+         FrameMargins->{{0, 0}, {8, 0}}]}, Dynamic[Typeset`open$$],
+        ImageSize->Automatic]]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+    GridBoxDividers->{"ColumnsIndexed" -> {{False}}, "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.8]}, 
+        Offset[0.2]}}],
+   BaseStyle->"InformationTitleFrame"], "InformationGridPlain"]], "Output",
+ CellChangeTimes->{
+  3.841408597659483*^9, 3.844166065224122*^9, 3.8477040219170923`*^9, 
+   3.8583036781011424`*^9, 3.8583072910687523`*^9, 3.8591088868014264`*^9, {
+   3.8592911835509157`*^9, 3.859291189402066*^9}, 3.8592914139132853`*^9, 
+   3.859291446491838*^9, 3.859292240912489*^9, {3.859292281964023*^9, 
+   3.8592922877447367`*^9}, 3.859292470086706*^9, {3.859292509490142*^9, 
+   3.8592925113470783`*^9}, 3.859423825322345*^9},
+ CellLabel->"Out[11]=",ExpressionUUID->"3cf98a9b-084a-4f6d-b5e5-b1333ccaf74d"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Define application-specific RCP-processes", "Subsubsection",
+ CellChangeTimes->{{3.8600363872766237`*^9, 
+  3.860036421209106*^9}},ExpressionUUID->"c08f04c0-1335-4a3f-a1fd-\
+527965c91705"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rcpProcesses", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Birth", "[", 
+      RowBox[{"1", ",", "b1", ",", "B1", ",", "1"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"BirthByFacilitation", "[", 
+      RowBox[{
+      "1", ",", "1", ",", "h", ",", "H", ",", "b11", ",", "B11", ",", "1"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"BirthByFacilitation", "[", 
+      RowBox[{
+      "2", ",", "1", ",", "h", ",", "H", ",", "b12", ",", "B12", ",", "1"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"DensityIndependentDeath", "[", 
+      RowBox[{"1", ",", "d1", ",", "1"}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"DensityIndependentDeath", "[", 
+      RowBox[{"2", ",", "d2", ",", "1"}], "]"}]}], "\[IndentingNewLine]", 
+    "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.859108892414472*^9, 3.8591089614028034`*^9}, {
+   3.859109051272147*^9, 3.8591091394358187`*^9}, {3.8591092392156754`*^9, 
+   3.8591092938041916`*^9}, {3.8592909570251417`*^9, 3.859290961380772*^9}, 
+   3.859292406862616*^9, 3.8592924525457077`*^9, 
+   3.860036437917899*^9},ExpressionUUID->"eeabce95-31b7-4d3d-9395-\
+820439739652"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Define variable names used by the UF-Software to generate ODEs\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.860036476729096*^9, 3.860036529913238*^9}},
+ FontWeight->"Plain",ExpressionUUID->"9df6d55b-9106-47c0-b24b-f7834f3c6fc4"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"qpgVariables", "=", 
+   RowBox[{"{", 
+    RowBox[{"q", ",", "p", ",", "g"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"kVariableInG", "=", "k"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"variableOfIntegrationFT", "=", "k"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"xVariableInG", "=", "x"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"variableOfIntegration", "=", "x"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dim", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Npr", "=", "1"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8414077564955783`*^9, 3.841407762264042*^9}, {
+   3.8414079079776387`*^9, 3.841407949260351*^9}, 3.841408593215373*^9, {
+   3.84140912986034*^9, 3.8414091307900057`*^9}, 3.843656622865449*^9, {
+   3.8477053040621204`*^9, 3.8477053048228846`*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"172bfd6d-03dd-4dfa-9eb1-150e9181500e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Substitute  UF-Software generated variable names for easier export to other \
+notebooks (optional)\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.859109805764627*^9, 3.859109808043455*^9}, {
+  3.859292691662469*^9, 3.859292717149876*^9}, {3.860036547156352*^9, 
+  3.860036550261269*^9}, {3.860951844083859*^9, 
+  3.860951846553082*^9}},ExpressionUUID->"93205972-e51a-4d79-8f78-\
+06973b2af6e7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"listOfSubs", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"q", "[", "1", "]"}], "\[Rule]", " ", 
+      RowBox[{"q1", "[", "t", "]"}]}], ",", " ", 
+     RowBox[{
+      RowBox[{"q", "[", "2", "]"}], "\[Rule]", " ", 
+      RowBox[{"q2", "[", "t", "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"p", "[", "1", "]"}], "\[Rule]", " ", 
+      RowBox[{"p1", "[", "t", "]"}]}], ",", " ", 
+     RowBox[{
+      RowBox[{"p", "[", "2", "]"}], "\[Rule]", " ", 
+      RowBox[{"p2", "[", "t", "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"g", "[", 
+       RowBox[{"1", ",", "1", ",", "k"}], "]"}], "\[Rule]", 
+      RowBox[{"G11", "[", 
+       RowBox[{"t", ",", "k"}], "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"g", "[", 
+       RowBox[{"1", ",", "2", ",", "k"}], "]"}], "\[Rule]", 
+      RowBox[{"G12", "[", 
+       RowBox[{"t", ",", "k"}], "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"g", "[", 
+       RowBox[{"2", ",", "2", ",", "k"}], "]"}], "\[Rule]", 
+      RowBox[{"G22", "[", 
+       RowBox[{"t", ",", "k"}], "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       StyleBox["B1",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "0", "]"}], " ", "\[Rule]", " ", 
+      "totIntB1"}], ",", 
+     RowBox[{
+      RowBox[{
+       StyleBox["B11",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "0", "]"}], " ", "\[Rule]", " ", 
+      "totIntB11"}], ",", " ", 
+     RowBox[{
+      RowBox[{
+       StyleBox["B12",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "0", "]"}], " ", "\[Rule]", " ", 
+      "totIntB12"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       StyleBox["B1",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "k", "]"}], "\[Rule]", " ", 
+      RowBox[{"B1", "[", "k", "]"}]}], ",", 
+     RowBox[{
+      RowBox[{
+       StyleBox["B11",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "k", "]"}], "\[Rule]", 
+      RowBox[{"B1", "[", "k", "]"}]}], ",", 
+     RowBox[{
+      RowBox[{"B12", "[", "k", "]"}], "\[Rule]", " ", 
+      RowBox[{"B12", "[", "k", "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       StyleBox["H",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "0", "]"}], " ", "\[Rule]", " ", 
+      "totIntH"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       StyleBox["H",
+        StripOnInput->False,
+        FontSlant->"Italic"], "[", "k", "]"}], "\[Rule]", 
+      RowBox[{"H", "[", "k", "]"}]}]}], "\[IndentingNewLine]", " ", "}"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.8591157906249456`*^9, 3.8591159314674873`*^9}, {
+   3.8591159685233335`*^9, 3.8591160710375347`*^9}, 3.8591161219262676`*^9, {
+   3.8591162254377346`*^9, 3.8591162291776643`*^9}, {3.8591162627053795`*^9, 
+   3.8591162786282578`*^9}, 3.859116495499488*^9, 3.8591165889528055`*^9, {
+   3.8591168643565288`*^9, 3.8591169610254292`*^9}, {3.8591170029014235`*^9, 
+   3.859117049353365*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"4b406b20-e9fb-4c14-ad31-6ee14413e34e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Generate STCM (and MFPM) equations", "Subsubsection",
+ CellChangeTimes->{{3.859109805764627*^9, 3.859109808043455*^9}, {
+  3.860035897591811*^9, 3.860035930296088*^9}, {3.860036650032185*^9, 
+  3.860036655088955*^9}},ExpressionUUID->"a86483e0-4361-4ef0-a562-\
+3d854b4f8568"],
+
+Cell["Note: MFPM equations consist of all \[OpenCurlyDoubleQuote]Q\
+\[CloseCurlyDoubleQuote] equations only.", "Text",
+ CellChangeTimes->{{3.860035912399983*^9, 3.860035942317067*^9}, {
+   3.860036004294444*^9, 3.860036020252987*^9}, 3.860036562814273*^9, {
+   3.8609518593743553`*^9, 
+   3.860951860046268*^9}},ExpressionUUID->"9fc887e7-6093-418d-b187-\
+43d7b7d10f2d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HQfALL", "[", 
+   RowBox[{"qpgVariables", ",", "rcpProcesses", ",", "1"}], "]"}], "//.", 
+  "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167040782011*^9, 3.844167080058302*^9}, 
+   3.84416772672735*^9, {3.8591093016313534`*^9, 3.8591093149160833`*^9}, 
+   3.859109814124069*^9, 3.8591163002088385`*^9, 3.85929245254777*^9},
+ CellLabel->"In[21]:=",ExpressionUUID->"0756f21d-54ee-4deb-a00f-79cfc0e1b0ef"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "d1"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntB1", " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntB11", " ", "totIntH", " ", 
+   SuperscriptBox[
+    RowBox[{"q1", "[", "t", "]"}], "2"]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167064416787*^9, 3.8441670804275665`*^9}, 
+   3.84416762043616*^9, {3.84416772672735*^9, 3.844167737516512*^9}, 
+   3.844167886644746*^9, 3.8477055212722225`*^9, 3.8477056382255225`*^9, 
+   3.8583037834043226`*^9, 3.8583072913097534`*^9, 3.8589099686186543`*^9, 
+   3.858917959433855*^9, 3.85891825050266*^9, 3.8589186716084566`*^9, 
+   3.8589188247556963`*^9, 3.858918895043949*^9, 3.8589190087213078`*^9, 
+   3.858919096589156*^9, 3.858919137522114*^9, 3.8589193689177012`*^9, 
+   3.859012864660783*^9, 3.8590138348224144`*^9, 3.8590139953009186`*^9, 
+   3.859015655714241*^9, 3.859109223241531*^9, {3.859109327336377*^9, 
+   3.8591093495175295`*^9}, {3.859109882689672*^9, 3.859109886407565*^9}, 
+   3.859116304205207*^9, 3.859116339273328*^9, 3.8591165954780483`*^9, 
+   3.8591169715753174`*^9, {3.85911705954*^9, 3.8591170825868216`*^9}, {
+   3.859291183580955*^9, 3.859291189434791*^9}, 3.859291413928336*^9, 
+   3.859291446517741*^9, 3.8592922409286957`*^9, {3.859292281989415*^9, 
+   3.859292287766232*^9}, 3.859292470108375*^9, {3.859292509521978*^9, 
+   3.859292511375169*^9}, 3.859423825342115*^9},
+ CellLabel->"Out[21]=",ExpressionUUID->"2556d3ec-9782-4669-a3a4-6e33673bf20c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HQfALL", "[", 
+   RowBox[{"qpgVariables", ",", "rcpProcesses", ",", "2"}], "]"}], "//.", 
+  "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.8441670822882075`*^9, 3.844167097364044*^9}, 
+   3.84416772672735*^9, 3.8591093040239677`*^9, 3.8591098171713805`*^9, 
+   3.8591163021865315`*^9, 3.859292452548777*^9},
+ CellLabel->"In[22]:=",ExpressionUUID->"dde64ff5-1d87-47e5-a080-92f885f9ec93"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "d2"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntB12", " ", "totIntH", " ", 
+   RowBox[{"q1", "[", "t", "]"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167093487908*^9, 3.8441670985281296`*^9}, 
+   3.8441676205096016`*^9, {3.84416772672735*^9, 3.8441677375484905`*^9}, 
+   3.8441678866772985`*^9, 3.847705641355913*^9, 3.858303783435355*^9, 
+   3.8583072913337955`*^9, 3.858909968640071*^9, 3.858917959465186*^9, 
+   3.858918250518283*^9, 3.8589186716441703`*^9, 3.8589188247874336`*^9, 
+   3.8589188950811987`*^9, 3.8589190087526217`*^9, 3.85891909662035*^9, 
+   3.8589191375377283`*^9, 3.8589193689504786`*^9, 3.859012864676427*^9, 
+   3.859013834854045*^9, 3.8590139953341837`*^9, 3.8590156558054123`*^9, 
+   3.859109223336794*^9, {3.8591093274397697`*^9, 3.8591093496065016`*^9}, 
+   3.8591098865727324`*^9, 3.8591163090069337`*^9, 3.8591163393736916`*^9, {
+   3.8591164788924828`*^9, 3.859116508340674*^9}, 3.8591165955667315`*^9, 
+   3.8591169716625032`*^9, {3.859117059618128*^9, 3.8591170826642046`*^9}, {
+   3.859291183583794*^9, 3.859291189437193*^9}, 3.85929141394248*^9, 
+   3.859291446520216*^9, 3.859292240941074*^9, {3.85929228199994*^9, 
+   3.859292287769085*^9}, 3.859292470119454*^9, {3.8592925095347443`*^9, 
+   3.859292511386396*^9}, 3.859423825350713*^9},
+ CellLabel->"Out[22]=",ExpressionUUID->"af5c6a1d-1d0a-4ef4-82e1-4f0cb8bedd1c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HPfALL", "[", 
+   RowBox[{
+   "qpgVariables", ",", "rcpProcesses", ",", "1", ",", 
+    "variableOfIntegrationFT", ",", "dim"}], "]"}], "//.", 
+  "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.8441671618589745`*^9, 3.8441671758425565`*^9}, 
+   3.84416772672735*^9, 3.8591093087486906`*^9, {3.8591098193841248`*^9, 
+   3.8591098194878454`*^9}, 3.8591163111053*^9, 3.859292452549646*^9},
+ CellLabel->"In[23]:=",ExpressionUUID->"476e7fbc-b981-4ab9-aa25-171fb95f78fb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"2", " ", "\[Pi]", " ", 
+   RowBox[{
+    SubsuperscriptBox["\[Integral]", "0", "\[Infinity]"], 
+    RowBox[{
+     RowBox[{"k", " ", "totIntB11", " ", 
+      RowBox[{"G11", "[", 
+       RowBox[{"t", ",", "k"}], "]"}], " ", 
+      RowBox[{"H", "[", "k", "]"}]}], 
+     RowBox[{"\[DifferentialD]", "k"}]}]}]}], "-", 
+  RowBox[{"d1", " ", 
+   RowBox[{"p1", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntB1", " ", 
+   RowBox[{"p1", "[", "t", "]"}]}], "+", 
+  RowBox[{"2", " ", "totIntB11", " ", "totIntH", " ", 
+   RowBox[{"p1", "[", "t", "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{
+  3.84416717653767*^9, 3.8441676206403875`*^9, {3.84416772672735*^9, 
+   3.844167737616856*^9}, 3.8441678867544084`*^9, 3.8477058091459618`*^9, 
+   3.8583037834861097`*^9, 3.8583072913933997`*^9, 3.858909968685092*^9, 
+   3.858917959527689*^9, 3.858918250599625*^9, 3.858918671707778*^9, 
+   3.858918824850337*^9, 3.858918895138813*^9, 3.8589190088463783`*^9, 
+   3.8589190966830482`*^9, 3.8589191376002207`*^9, 3.8589193690120687`*^9, 
+   3.859012864708067*^9, 3.859013834888919*^9, 3.859013995381113*^9, 
+   3.859015655841276*^9, 3.8591092235404325`*^9, {3.8591093274633713`*^9, 
+   3.8591093496602287`*^9}, 3.859109886664426*^9, {3.859116312454107*^9, 
+   3.8591163394318333`*^9}, 3.859116595633169*^9, 3.8591169717150993`*^9, {
+   3.8591170596826906`*^9, 3.8591170827165227`*^9}, {3.859291183586989*^9, 
+   3.859291189450369*^9}, 3.8592914139453173`*^9, 3.859291446533594*^9, 
+   3.859292240945054*^9, {3.8592922820053387`*^9, 3.8592922877726316`*^9}, 
+   3.8592924701351557`*^9, {3.8592925096144657`*^9, 3.859292511402369*^9}, 
+   3.859423825453704*^9},
+ CellLabel->"Out[23]=",ExpressionUUID->"e287251b-f504-4406-aa2a-3277dd01b3e4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HPfALL", "[", 
+   RowBox[{
+   "qpgVariables", ",", "rcpProcesses", ",", "2", ",", 
+    "variableOfIntegrationFT", ",", "dim"}], "]"}], "//.", 
+  "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167186464611*^9, 3.844167186599416*^9}, 
+   3.84416772672735*^9, {3.8591093175088944`*^9, 3.859109320779334*^9}, {
+   3.8591098217079782`*^9, 3.859109821788536*^9}, 3.8591163241738625`*^9, 
+   3.859292452550454*^9},
+ CellLabel->"In[24]:=",ExpressionUUID->"f37e0d97-4e64-414b-b713-a1cd2c8824a6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"2", " ", "\[Pi]", " ", 
+   RowBox[{
+    SubsuperscriptBox["\[Integral]", "0", "\[Infinity]"], 
+    RowBox[{
+     RowBox[{"k", " ", "totIntB12", " ", 
+      RowBox[{"G12", "[", 
+       RowBox[{"t", ",", "k"}], "]"}], " ", 
+      RowBox[{"H", "[", "k", "]"}]}], 
+     RowBox[{"\[DifferentialD]", "k"}]}]}]}], "-", 
+  RowBox[{"d2", " ", 
+   RowBox[{"p2", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntB12", " ", "totIntH", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"p2", "[", "t", "]"}], " ", 
+      RowBox[{"q1", "[", "t", "]"}]}], "+", 
+     RowBox[{
+      RowBox[{"p1", "[", "t", "]"}], " ", 
+      RowBox[{"q2", "[", "t", "]"}]}]}], ")"}]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{
+  3.8441671877683697`*^9, 3.8441676207426205`*^9, {3.84416772672735*^9, 
+   3.8441677376663465`*^9}, 3.844167886770377*^9, {3.8477058114366055`*^9, 
+   3.8477058146171217`*^9}, 3.858303783899101*^9, 3.858307291425417*^9, 
+   3.858909968708227*^9, 3.8589179595432224`*^9, 3.8589182506213627`*^9, 
+   3.858918672195015*^9, 3.8589188248815837`*^9, 3.858918895174079*^9, 
+   3.8589190088775864`*^9, 3.8589190967141876`*^9, 3.8589191376471095`*^9, 
+   3.858919369046338*^9, 3.8590128647237034`*^9, 3.8590138352397747`*^9, 
+   3.8590139954009233`*^9, 3.859015655856969*^9, 3.8591092236073103`*^9, {
+   3.8591093274790106`*^9, 3.8591093497109857`*^9}, 3.8591098867347965`*^9, 
+   3.8591163395148463`*^9, 3.8591165956802764`*^9, 3.8591169717700667`*^9, {
+   3.859117059739175*^9, 3.859117082771286*^9}, {3.859291183591641*^9, 
+   3.859291189454163*^9}, 3.859291413955755*^9, 3.85929144653725*^9, 
+   3.859292240955226*^9, {3.859292282017239*^9, 3.859292287782394*^9}, 
+   3.859292470150503*^9, {3.859292509637353*^9, 3.85929251141854*^9}, 
+   3.859423825475684*^9},
+ CellLabel->"Out[24]=",ExpressionUUID->"40d2ddc3-c70c-4c67-bb9b-4a116d32b694"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HGfALL", "[", 
+   RowBox[{
+   "qpgVariables", ",", "rcpProcesses", ",", "1", ",", "1", ",", 
+    "kVariableInG"}], "]"}], "//.", "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.84416727070713*^9, 3.844167340639621*^9}, {
+   3.8441675805529757`*^9, 3.844167581190403*^9}, 3.84416772672735*^9, 
+   3.8591093222810974`*^9, {3.8591098236072054`*^9, 3.859109823732597*^9}, 
+   3.8591163271877437`*^9, 3.859292452551216*^9},
+ CellLabel->"In[25]:=",ExpressionUUID->"315e3e80-c7c5-45e7-8295-68dd65dfbefc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "2"}], " ", "d1", " ", 
+   RowBox[{"G11", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "+", 
+  RowBox[{"2", " ", 
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G11", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "+", 
+  RowBox[{"2", " ", 
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{"2", " ", "totIntH", " ", 
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G11", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{"2", " ", 
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G11", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"H", "[", "k", "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"2", " ", "totIntH", " ", 
+      RowBox[{"B1", "[", "k", "]"}]}], "+", 
+     RowBox[{"2", " ", 
+      RowBox[{"B1", "[", "k", "]"}], " ", 
+      RowBox[{"H", "[", "k", "]"}]}]}], ")"}], " ", 
+   SuperscriptBox[
+    RowBox[{"q1", "[", "t", "]"}], "2"]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.8441673339475927`*^9, 3.8441673418037195`*^9}, 
+   3.8441676209306097`*^9, {3.84416772672735*^9, 3.844167737765339*^9}, 
+   3.8441678868373547`*^9, 3.847706444596983*^9, 3.8583037839557605`*^9, 
+   3.858307291482794*^9, 3.8589099687547507`*^9, 3.858917959606434*^9, 
+   3.85891825068657*^9, 3.858918672259534*^9, 3.858918824928454*^9, 
+   3.8589188952332544`*^9, 3.858919008956151*^9, 3.8589190967610607`*^9, 
+   3.858919137709606*^9, 3.858919369122388*^9, 3.8590128647549458`*^9, 
+   3.85901383529436*^9, 3.859013995448637*^9, 3.8590156559053416`*^9, 
+   3.859109223629857*^9, {3.8591093274946427`*^9, 3.859109349739627*^9}, 
+   3.859109886756872*^9, 3.8591163395358458`*^9, 3.8591165956963215`*^9, {
+   3.8591169718013644`*^9, 3.85911699485446*^9}, {3.859117059770439*^9, 
+   3.8591170827918224`*^9}, {3.859291183604026*^9, 3.85929118946832*^9}, 
+   3.859291413959155*^9, 3.85929144655007*^9, 3.859292240958503*^9, {
+   3.859292282022686*^9, 3.859292287787569*^9}, 3.8592924701546993`*^9, {
+   3.859292509651927*^9, 3.85929251142223*^9}, 3.859423825479376*^9},
+ CellLabel->"Out[25]=",ExpressionUUID->"5ea42366-e4d5-454f-b5fb-97e7782c1c22"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HGfALL", "[", 
+   RowBox[{
+   "qpgVariables", ",", "rcpProcesses", ",", "1", ",", "2", ",", 
+    "kVariableInG"}], "]"}], "//.", "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167797984603*^9, 3.8441677991867447`*^9}, 
+   3.8441678586334496`*^9, {3.859109207751519*^9, 3.8591092079508486`*^9}, 
+   3.8591093239354086`*^9, {3.8591098261032534`*^9, 3.859109826222575*^9}, 
+   3.859116331443531*^9, 3.859292450525343*^9},
+ CellLabel->"In[26]:=",ExpressionUUID->"ac4843ed-0a31-471f-8087-f576088897ca"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "d1"}], " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "-", 
+  RowBox[{"d2", " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "+", 
+  RowBox[{
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "+", 
+  RowBox[{"totIntH", " ", 
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{
+   RowBox[{"B1", "[", "k", "]"}], " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"H", "[", "k", "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}]}], "+", 
+  RowBox[{"totIntH", " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}], "+", 
+  RowBox[{
+   RowBox[{"G11", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"H", "[", "k", "]"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}], "+", 
+  RowBox[{
+   RowBox[{"H", "[", "k", "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{
+  3.844167801806025*^9, {3.8441678586334496`*^9, 3.844167886869749*^9}, 
+   3.847706446161064*^9, 3.8583037839889326`*^9, 3.858307291514577*^9, 
+   3.8589099687780423`*^9, 3.8589179596220627`*^9, 3.8589182507127447`*^9, 
+   3.8589186722928753`*^9, 3.85891882497536*^9, 3.858918895267003*^9, 
+   3.8589190089717073`*^9, 3.858919096792303*^9, 3.85891913772517*^9, 
+   3.8589193691556034`*^9, 3.8590128647706237`*^9, 3.8590138353099833`*^9, 
+   3.8590139954798737`*^9, 3.859015655935567*^9, 3.859109223654063*^9, {
+   3.8591093275102587`*^9, 3.8591093497561617`*^9}, 3.8591098867734284`*^9, 
+   3.859116339563892*^9, 3.8591165957253604`*^9, 3.8591169718207717`*^9, {
+   3.859117059786473*^9, 3.8591170828237767`*^9}, {3.859291183607959*^9, 
+   3.8592911894738503`*^9}, 3.859291413962028*^9, 3.8592914465536423`*^9, 
+   3.859292240969615*^9, {3.859292282034045*^9, 3.85929228779738*^9}, 
+   3.859292470165762*^9, {3.8592925096671543`*^9, 3.859292511436698*^9}, 
+   3.8594238254899807`*^9},
+ CellLabel->"Out[26]=",ExpressionUUID->"9f4e936f-5078-48df-ad8b-640d2b27b499"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HGfALL", "[", 
+   RowBox[{
+   "qpgVariables", ",", "rcpProcesses", ",", "2", ",", "2", ",", 
+    "kVariableInG"}], "]"}], "//.", "listOfSubs"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{{3.844167803208902*^9, 3.844167813743297*^9}, 
+   3.8441678586334496`*^9, {3.8591092113881836`*^9, 3.8591092117197547`*^9}, 
+   3.8591093250947714`*^9, {3.859109828816573*^9, 3.8591098289273443`*^9}, 
+   3.859116334928133*^9, 3.8592924525519943`*^9},
+ CellLabel->"In[27]:=",ExpressionUUID->"8ff55512-9cc0-41e5-a2b5-3ea0ec6de5f2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "2"}], " ", "d2", " ", 
+   RowBox[{"G22", "[", 
+    RowBox[{"t", ",", "k"}], "]"}]}], "+", 
+  RowBox[{"2", " ", "totIntH", " ", 
+   RowBox[{"G22", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"q1", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}], "+", 
+  RowBox[{"2", " ", 
+   RowBox[{"G12", "[", 
+    RowBox[{"t", ",", "k"}], "]"}], " ", 
+   RowBox[{"H", "[", "k", "]"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}], "+", 
+  RowBox[{"2", " ", "totIntH", " ", 
+   RowBox[{"q1", "[", "t", "]"}], " ", 
+   RowBox[{"q2", "[", "t", "]"}], " ", 
+   RowBox[{
+    StyleBox["B12",
+     StripOnInput->False,
+     FontSlant->"Italic"], "[", "k", "]"}]}]}]], "Output",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ CellChangeTimes->{
+  3.844167814311678*^9, {3.8441678586334496`*^9, 3.8441678869057393`*^9}, 
+   3.847706447751197*^9, 3.8583037840151324`*^9, 3.858307291539683*^9, 
+   3.858909968801966*^9, 3.8589179596533127`*^9, 3.858918250737934*^9, 
+   3.858918672322611*^9, 3.8589188249909487`*^9, 3.8589188953007903`*^9, 
+   3.8589190090190496`*^9, 3.8589190968235984`*^9, 3.8589191377564535`*^9, 
+   3.858919369187923*^9, 3.8590128647862573`*^9, 3.8590138353256073`*^9, 
+   3.859013995495491*^9, 3.859015655951186*^9, 3.859109223681675*^9, {
+   3.8591093275308704`*^9, 3.8591093497817883`*^9}, 3.8591098293667545`*^9, 
+   3.8591098868050165`*^9, 3.8591163395699816`*^9, 3.859116595747019*^9, 
+   3.8591169718466363`*^9, {3.859117059820412*^9, 3.8591170828398013`*^9}, {
+   3.859291183619623*^9, 3.859291189486191*^9}, 3.859291413967292*^9, 
+   3.859291446566416*^9, 3.8592922409729633`*^9, {3.859292282039352*^9, 
+   3.8592922878010387`*^9}, 3.859292470171874*^9, {3.859292509682169*^9, 
+   3.859292511441215*^9}, 3.859423825494272*^9},
+ CellLabel->"Out[27]=",ExpressionUUID->"9e3e55eb-6d3a-400b-9c51-cddfb789716f"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1003, 929},
+WindowMargins->{{272, Automatic}, {Automatic, 14}},
+Magnification:>0.8 Inherited,
+FrontEndVersion->"13.0 for Mac OS X ARM (64-bit) (February 4, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"06fd0794-1d25-4c30-885d-3463f90cbedf"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 322, 5, 78, "Title",ExpressionUUID->"5859def6-c332-42e0-a934-4f6f86374568"],
+Cell[905, 29, 593, 10, 65, "Text",ExpressionUUID->"e837ba2c-4510-47ae-a8c2-e82d7cbd9dd8"],
+Cell[CellGroupData[{
+Cell[1523, 43, 166, 3, 36, "Subsubsection",ExpressionUUID->"4c732723-76b3-46e8-9b4b-83f1593a8c81"],
+Cell[1692, 48, 339, 5, 24, "Input",ExpressionUUID->"c400b7b3-504e-48ec-bb8d-0c7bd3edbbcd"],
+Cell[2034, 55, 326, 7, 28, "Text",ExpressionUUID->"7bd97474-7c75-4133-93f2-76c9c85f9387"],
+Cell[2363, 64, 292, 4, 24, "Input",ExpressionUUID->"8fca06a6-822d-4e84-b696-83db558c563b"],
+Cell[2658, 70, 168, 2, 24, "Input",ExpressionUUID->"989eb80d-3adc-4f4d-a15a-197427c019f9"],
+Cell[2829, 74, 227, 3, 24, "Input",ExpressionUUID->"5ea73276-dc52-4737-8fc0-5e12d62a9368"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3093, 82, 304, 5, 36, "Subsubsection",ExpressionUUID->"42691c9d-2f30-49e1-8fc9-dd74e98183f7"],
+Cell[CellGroupData[{
+Cell[3422, 91, 264, 4, 24, "Input",ExpressionUUID->"a92a8805-dbc1-47b6-bd88-259ca47b5872"],
+Cell[3689, 97, 13405, 300, 238, "Output",ExpressionUUID->"245100d6-2984-46b4-853c-f81e2e7cd79d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17131, 402, 272, 4, 24, "Input",ExpressionUUID->"e7860462-99df-4604-bf65-a7e18792ef96"],
+Cell[17406, 408, 13440, 300, 148, "Output",ExpressionUUID->"ed500820-f000-43f5-ad67-486d0bbb48b7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30883, 713, 293, 4, 24, "Input",ExpressionUUID->"35b5be82-8687-44b1-ba8c-292ce24ee596"],
+Cell[31179, 719, 9979, 225, 112, "Output",ExpressionUUID->"30e31c8d-0427-4545-9491-c2c84e277a96"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41195, 949, 204, 3, 24, "Input",ExpressionUUID->"f0194bd3-a5d7-4ac0-8614-5046e7d9f6a9"],
+Cell[41402, 954, 4467, 104, 78, "Output",ExpressionUUID->"3cf98a9b-084a-4f6d-b5e5-b1333ccaf74d"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[45918, 1064, 194, 3, 36, "Subsubsection",ExpressionUUID->"c08f04c0-1335-4a3f-a1fd-527965c91705"],
+Cell[46115, 1069, 1215, 26, 127, "Input",ExpressionUUID->"eeabce95-31b7-4d3d-9395-820439739652"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[47367, 1100, 238, 4, 36, "Subsubsection",ExpressionUUID->"9df6d55b-9106-47c0-b24b-f7834f3c6fc4"],
+Cell[47608, 1106, 912, 21, 127, "Input",ExpressionUUID->"172bfd6d-03dd-4dfa-9eb1-150e9181500e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48557, 1132, 401, 8, 36, "Subsubsection",ExpressionUUID->"93205972-e51a-4d79-8f78-06973b2af6e7"],
+Cell[48961, 1142, 3188, 84, 195, "Input",ExpressionUUID->"4b406b20-e9fb-4c14-ad31-6ee14413e34e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[52186, 1231, 280, 4, 36, "Subsubsection",ExpressionUUID->"a86483e0-4361-4ef0-a562-3d854b4f8568"],
+Cell[52469, 1237, 369, 6, 28, "Text",ExpressionUUID->"9fc887e7-6093-418d-b187-43d7b7d10f2d"],
+Cell[CellGroupData[{
+Cell[52863, 1247, 498, 9, 25, "Input",ExpressionUUID->"0756f21d-54ee-4deb-a00f-79cfc0e1b0ef",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[53364, 1258, 1565, 27, 28, "Output",ExpressionUUID->"2556d3ec-9782-4669-a3a4-6e33673bf20c",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[54932, 1287, 477, 9, 25, "Input",ExpressionUUID->"dde64ff5-1d87-47e5-a080-92f885f9ec93",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[55412, 1298, 1524, 25, 28, "Output",ExpressionUUID->"af5c6a1d-1d0a-4ef4-82e1-4f0cb8bedd1c",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[56939, 1325, 554, 11, 25, "Input",ExpressionUUID->"476e7fbc-b981-4ab9-aa25-171fb95f78fb",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[57496, 1338, 1838, 35, 40, "Output",ExpressionUUID->"e287251b-f504-4406-aa2a-3277dd01b3e4",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[59337, 1375, 580, 12, 25, "Input",ExpressionUUID->"f37e0d97-4e64-414b-b713-a1cd2c8824a6",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[59920, 1389, 1920, 39, 40, "Output",ExpressionUUID->"40d2ddc3-c70c-4c67-bb9b-4a116d32b694",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[61843, 1430, 587, 11, 25, "Input",ExpressionUUID->"315e3e80-c7c5-45e7-8295-68dd65dfbefc",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[62433, 1443, 2307, 50, 46, "Output",ExpressionUUID->"5ea42366-e4d5-454f-b5fb-97e7782c1c22",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[64743, 1495, 591, 11, 25, "Input",ExpressionUUID->"ac4843ed-0a31-471f-8087-f576088897ca",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[65337, 1508, 2610, 65, 46, "Output",ExpressionUUID->"9f4e936f-5078-48df-ad8b-640d2b27b499",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[67950, 1575, 593, 11, 25, "Input",ExpressionUUID->"8ff55512-9cc0-41e5-a2b5-3ea0ec6de5f2",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[68546, 1588, 2068, 46, 29, "Output",ExpressionUUID->"9e3e55eb-6d3a-400b-9c51-cddfb789716f",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
