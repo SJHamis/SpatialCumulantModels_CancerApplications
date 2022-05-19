@@ -3,7 +3,7 @@ Spatial cumulant models for cancer applications.
 
 When using these codes, please cite: 
 
-Hamis, S. Somervuo, P., Ågren, J.A. et al. "Spatial cumulant models enable spatially informed treatment strategies and analysis of local interactions in cancer systems". Biorxiv (2022). https://www.biorxiv.org/content/10.1101/2022.05.07.491050v1
+Hamis, S., Somervuo, P., Ågren, J.A. et al. "Spatial cumulant models enable spatially informed treatment strategies and analysis of local interactions in cancer systems". Biorxiv (2022). https://www.biorxiv.org/content/10.1101/2022.05.07.491050v1
 
 and
 
