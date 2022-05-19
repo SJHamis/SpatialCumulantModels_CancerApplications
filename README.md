@@ -7,7 +7,7 @@ Hamis, S. Somervuo, P., Ågren, A. et al. "Spatial cumulant models enable spatia
 
 and
 
-Cornell, S.J., Suprunenko, Y.F., Finkelshtein, D. et al. A unified framework for analysis of individual-based models in ecology and beyond. Nat Commun 10, 4716 (2019). https://doi.org/10.1038/s41467-019-12172-y.
+Cornell, S.J., Suprunenko, Y.F., Finkelshtein, D. et al. "A unified framework for analysis of individual-based models in ecology and beyond". Nat Commun 10, 4716 (2019). https://doi.org/10.1038/s41467-019-12172-y.
 
 Instructions on how to run and modify the pipeline code files are available in Hamis et al. 2022 (Supplementary Information). 
 
