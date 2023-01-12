@@ -16,10 +16,10 @@ done
 
 for i in {1..100};
 do
-    STPP_code_files/ppsimulator.o -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL_DIR/Model_MFPM_${i} -i $ICC_DIR/run${i}/snap000$DOSE_TIME -o STPPoutputs/out -U 1000 -T 150 -dT 1 -r ${i} -osep snapshots/${VERSIONMFPM}/run${i}/snap;
+    STPP_code_files/ppsimulator -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL_DIR/Model_MFPM_${i} -i $ICC_DIR/run${i}/snap000$DOSE_TIME -o STPPoutputs/out -U 1000 -T 150 -dT 1 -r ${i} -osep snapshots/${VERSIONMFPM}/run${i}/snap;
 done
 
 for i in {1..100};
 do
-    STPP_code_files/ppsimulator.o -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL_DIR/Model_SCM_${i} -i $ICC_DIR/run${i}/snap000$DOSE_TIME -o STPPoutputs/out -U 1000 -T 150 -dT 1 -r ${i} -osep snapshots/${VERSIONSCM}/run${i}/snap;
+    STPP_code_files/ppsimulator -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL_DIR/Model_SCM_${i} -i $ICC_DIR/run${i}/snap000$DOSE_TIME -o STPPoutputs/out -U 1000 -T 150 -dT 1 -r ${i} -osep snapshots/${VERSIONSCM}/run${i}/snap;
 done

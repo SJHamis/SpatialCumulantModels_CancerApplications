@@ -12,7 +12,7 @@ done
 
 for i in {1..100};
 do
-    STPP_code_files/ppsimulator.o -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL -i $ICC -o STPPoutputs/out -U 1000 -T 200 -dT 1 -r ${i} -osep snapshots/${VERSION}/run${i}/snap;
+    STPP_code_files/ppsimulator -p model_definition_STPP/rcp_models/processes.txt -m $RCP_MODEL -i $ICC -o STPPoutputs/out -U 1000 -T 200 -dT 1 -r ${i} -osep snapshots/${VERSION}/run${i}/snap;
 done
 
 #The below lines can be included to generate snapshot films: 
